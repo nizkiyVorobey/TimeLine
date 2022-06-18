@@ -3,56 +3,63 @@ package com.example.timeline.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.timeline.BuildConfig
-import com.example.timeline.TimeLineApp
-import com.example.timeline.domain.person.PersonRepository
-import com.example.timeline.presentation.home.components.HomeScreen
+import com.example.timeline.presentation.home.HomeScreen
 import com.example.timeline.ui.theme.TimeLineTheme
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject lateinit var  repository: PersonRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-        (application as TimeLineApp).appComponent.inject(this)
 
         setContent {
-            TimeLineTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    App()
-                }
-            }
+            App()
         }
     }
+}
 
-
-    private fun getData() {
-        lifecycleScope.launchWhenStarted {
-            val res = repository.getPersonCategoryList()
-            Timber.d("RES: ${res}")
-        }
-    }
+sealed class NavigationDestination(val destination: String) {
+    object HomeScreen : NavigationDestination("HomeScreen")
 }
 
 @Composable
 fun App() {
-    HomeScreen()
+    TimeLineTheme {
+//        val allScreens = TimeLineScreens.values().toList()
+//        var currentScreen by rememberSaveable {
+//             mutableStateOf(TimeLineScreens.HomeScreen)
+//        }
+//
+//        Box() {
+//            currentScreen.content(
+//                onScreenChange = { screen ->
+//                    currentScreen = TimeLineScreens.valueOf(screen)
+//                }
+//            )
+//        }
+
+        val navController = rememberNavController()
+
+        NavHost(navController, startDestination = NavigationDestination.HomeScreen.destination) {
+            composable(NavigationDestination.HomeScreen.destination) {
+                HomeScreen()
+            }
+
+        }
+    }
 }
+
 
 @Preview(showBackground = true)
 @Composable

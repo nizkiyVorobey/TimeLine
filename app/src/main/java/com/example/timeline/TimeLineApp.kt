@@ -1,14 +1,8 @@
 package com.example.timeline
 
 import android.app.Application
-import com.example.timeline.di.AppComponent
-import com.example.timeline.di.DaggerAppComponent
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 
-open class TimeLineApp : Application() {
-    // Instance of the AppComponent that will be used by all the Activities in the project
-    val appComponent: AppComponent by lazy {
-        // Creates an instance of AppComponent using its Factory constructor
-        // We pass the applicationContext that will be used as Context in the graph
-        DaggerAppComponent.factory().create(this)
-    }
-}
+@HiltAndroidApp
+class TimeLineApp : Application()

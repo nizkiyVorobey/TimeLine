@@ -14,15 +14,33 @@ data class PersonProfile(
 )
 
 data class PersonListItem(
-    val avatarUrl: String = "",
-    val firstName: String,
-    val lastName: String,
+    val avatarUrl: String? = null,
+    val firstName: String = "",
+    val lastName: String = "",
     val unreadPostCount: Int = 0 // TODO maybe only for logged/premium user
 )
 
-data class PersonCategory(
+data class PersonCategory (
     val title: String = "",
     val id: Int = 1,
     val isActive: Boolean = false,
     val persons: List<PersonListItem> = emptyList()
+)
+
+data class PersonCategoryFilter (
+    val title: String = "",
+    val id: Int = 1,
+    val isActive: Boolean = false,
+)
+
+data class PersonCategoryServer(
+    val title: String = "",
+    val id: Int = 1,
+    val persons: List<PersonListItemServer> = emptyList()
+)
+
+data class PersonListItemServer(
+    val avatar: String? = null,
+    val first_name: String? = null,
+    val last_name: String? = null,
 )
